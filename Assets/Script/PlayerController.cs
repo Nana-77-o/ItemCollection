@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField, Tooltip("ë¨ìxêßå¿éûä‘")]
-    private int _stanTime = 3;
+    private int _decelerationTime = 3;
     [SerializeField, Tooltip("å∏ë¨ó ")]
     private int _deceleration = 2;
 
@@ -26,7 +26,6 @@ public class PlayerController : MonoBehaviour
     {
         var h = Input.GetAxis("Horizontal");
         var v = Input.GetAxis("Vertical");
-        if (transform.position.x < 1833) { return; }
         transform.position += new Vector3(h * _speed, 0, 0);
     }
 
@@ -38,7 +37,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator Weight()
     {
         _speed -= _deceleration;
-        yield return new WaitForSeconds(_stanTime);
+        yield return new WaitForSeconds(_decelerationTime);
         _speed += _deceleration;
     }
 

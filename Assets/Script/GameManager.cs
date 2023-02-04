@@ -22,14 +22,17 @@ public class GameManager : MonoBehaviour
     [SerializeField, Tooltip("ゲームスタート時にすること")]
     private UnityEvent _gameStart;
 
+    private GameObject _newPlayer = null;
     private bool _startGame = false;
     private int _playerId = 0;
 
     void Start()
     {
-        _playerId = CharacterCelect.Instance.PlayerIndex;
-        var player = Instantiate(_players[_playerId]);
-        player.GetComponent<PlayerController>().SetUp(_playerData._playerDataBace[_playerId]);
+        if(CharacterCelect.Instance == null) { _playerId = 0; }
+        else {_playerId = CharacterCelect.Instance.PlayerIndex; }
+        _newPlayer = Instantiate(_players[_playerId]);
+        _newPlayer.GetComponent<PlayerController>().SetUp(_playerData._playerDataBace[_playerId]);
+        _newPlayer.GetComponent<PlayerController>().enabled = false;
     }
 
     void Update()
@@ -43,6 +46,7 @@ public class GameManager : MonoBehaviour
         {
             _countDownText.gameObject.SetActive(false);
             _startGame = true;
+            _newPlayer.GetComponent<PlayerController>().enabled = true;
             _gameStart.Invoke();
         }
         
