@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField]
-    float _interval = 1; // 生成間隔
-    [SerializeField]
-    int _itemCount = 5;//アイテムの数
-    [SerializeField, Tooltip("レアアイテムの出現確率")]
+    [SerializeField, Tooltip("生成間隔")]
+    float _interval = 1;
+    [SerializeField, Tooltip("アイテムの数")]
+    int _itemCount = 5;
+    [SerializeField, Tooltip("アイテムの出現確率")]
     int[] _itemWeight = null;
-    [SerializeField]
+    [SerializeField, Tooltip("アイテム")]
     GameObject[] _item = null;
 
     private float _totalWeight = 0f;

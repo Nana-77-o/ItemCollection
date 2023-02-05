@@ -12,5 +12,9 @@ public class Item : MonoBehaviour
         {
             this.gameObject.SetActive(false);
         }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }
