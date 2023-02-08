@@ -6,13 +6,13 @@ public class Item : MonoBehaviour
 
     public int Score { get => _score; set => _score = value; }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground"))
         {
             this.gameObject.SetActive(false);
         }
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player"))
         {
             this.gameObject.SetActive(false);
         }

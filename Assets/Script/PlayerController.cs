@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         var h = Input.GetAxis("Horizontal");
+        if(gameObject.transform.position.x > 8.0 || gameObject.transform.position.x < -8.5) { return; }
         if(h < 0) { gameObject.GetComponent<SpriteRenderer>().flipX = false; }
         else if(h > 0) { gameObject.GetComponent<SpriteRenderer>().flipX = true; }
         transform.position += new Vector3(h * _speed, 0, 0);
@@ -52,15 +53,15 @@ public class PlayerController : MonoBehaviour
         _speed += _deceleration;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Item"))
+        if (other.gameObject.CompareTag("Item"))
         {
-            _addScore = collision.gameObject.GetComponent<Item>().Score;
+            _addScore = other.gameObject.GetComponent<Item>().Score;
             _totalScore += _addScore;
             ScoreText.text = $"{_totalScore:000,000,000}";
         }
-        if (collision.gameObject.CompareTag("Weight"))
+        if (other.gameObject.CompareTag("Weight"))
         {
             StartCoroutine(Weight());
         }

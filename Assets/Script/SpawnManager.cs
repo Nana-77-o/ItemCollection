@@ -12,9 +12,12 @@ public class SpawnManager : MonoBehaviour
     int[] _itemWeight = null;
     [SerializeField, Tooltip("アイテム")]
     GameObject[] _item = null;
+    [SerializeField]
+    private float pozY = 7.0f;
 
     private float _totalWeight = 0f;
     private float _elapsed; // 経過時間
+    private const float POZ_X = 6.5f;
 
     private void Start()
     {
@@ -33,7 +36,8 @@ public class SpawnManager : MonoBehaviour
         if (_elapsed > _interval)
         {
             _elapsed = 0;
-            Instantiate(_item[PramProbability()], transform);
+            var obj = Instantiate(_item[PramProbability()], transform);
+            Curve(obj);
         }
     }
 
@@ -42,22 +46,26 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     int PramProbability()
     {
-        var randomPoint = UnityEngine.Random.Range(0, _totalWeight);
+        var randomPoint = Random.Range(0, _totalWeight);
 
-        // 乱数値が属する要素を先頭から順に選択
         var currentWeight = 0f;
         for (var i = 0; i < _itemWeight.Length; i++)
         {
-            // 現在要素までの重みの総和を求める
             currentWeight += _itemWeight[i];
 
-            // 乱数値が現在要素の範囲内かチェック
             if (randomPoint < currentWeight)
             {
                 return i;
             }
         }
-        // 乱数値が重みの総和以上なら末尾要素とする
         return _itemWeight.Length - 1;
+    }
+
+    private void Curve(GameObject obj)
+    {
+        var rb =  obj.GetComponent<Rigidbody>();
+        var pozX = Random.Range(-POZ_X, POZ_X);
+        var force = new Vector3(pozX, pozY, 0);
+        rb.AddForce(force, ForceMode.Impulse);
     }
 }
