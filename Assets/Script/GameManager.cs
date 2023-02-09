@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private Text _scoreText = null;
     [SerializeField, Tooltip("カウントダウンテキスト")]
     private Text _countDownText = null;
+    //[SerializeField]
+    //private SpawnManager _spawnManager = null;
     [SerializeField, Tooltip("ゲームスタート時にすること")]
     private UnityEvent _gameStart;
     [SerializeField, Header("ゲーム終了時")]
@@ -27,14 +29,23 @@ public class GameManager : MonoBehaviour
     private Text _sore = null;
     [SerializeField]
     private Text _text = null;
-    [SerializeField]
-    private GameObject _moneys;
     [SerializeField, Tooltip("ゲーム終了時にすること")]
     private UnityEvent _gameFinisht;
+    [SerializeField]
+    private AudioSource _se;
+    [SerializeField, Tooltip("子供が交番にお金を届ける")]
+    private GameObject _kidsAnim;
+    [SerializeField]
+    private Text _subtractionScore = null;
+    [SerializeField]
+    private AudioSource _kidsSE;
+    [SerializeField, Tooltip("一番最後にすること")]
+    private UnityEvent _finalEvent;
 
     private GameObject _newPlayer = null;
     private bool _startGame = false;
     private bool _gameClere = false;
+    //private bool _timeFlag = false;
     private int _playerId = 0;
     private string[] _textList = null;
     private const float NEXT_TEXT = 1f;
@@ -64,6 +75,7 @@ public class GameManager : MonoBehaviour
         
         if (!_startGame) { return; }
         if (_timer <= 0 && !_gameClere) { GameClear(); }
+        //if( _timer <= _timer / 2 && !_timeFlag) { _spawnManager.Interval = 0.5f; _timeFlag = true; }
         _timer -= Time.deltaTime;
         int minutes = (int)_timer / 60;
         float seconds = _timer - minutes * 60;
@@ -99,6 +111,26 @@ public class GameManager : MonoBehaviour
             _sore.text = $"{_textList[i]}{_sore.text}";
             yield return new WaitForSeconds(NEXT_TEXT);
         }
-        _moneys.SetActive(true);
+         _se.Stop();
+        if (_playerId == 3)
+        {
+            string scoreString = _scoreText.text;
+            string[] sr = scoreString.Split(",");
+            string totalsr = null;
+            for (int i = 0; i < sr.Length; i++)
+            {
+                totalsr += sr[i];
+            }
+            int score = int.Parse(totalsr);
+            int subtractionScore = Random.Range(0, score);
+            _kidsAnim.SetActive(true);
+
+            yield return new WaitForSeconds(2);
+            _kidsSE.Play();
+            _sore.text = $"{score - subtractionScore:000,000,000}";
+            _subtractionScore.text = $"-{subtractionScore}";
+        }
+        _finalEvent.Invoke();
+       
     }
 }
