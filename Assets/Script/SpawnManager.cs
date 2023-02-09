@@ -15,9 +15,12 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float pozY = 7.0f;
 
+    private float _spawnDelay = 0f;
     private float _totalWeight = 0f;
     private float _elapsed; // 経過時間
     private const float POZ_X = 6.5f;
+
+    public float Interval { get => _interval; set => _interval = value; }
 
     private void Start()
     {
@@ -25,25 +28,28 @@ public class SpawnManager : MonoBehaviour
         {
             _totalWeight += _itemWeight[i];
         }
+        InvokeRepeating("Instans", _spawnDelay, Interval);
     }
     void Update()
     {
-        _elapsed += Time.deltaTime;
         if (GameObject.FindGameObjectsWithTag("Item").Length + GameObject.FindGameObjectsWithTag("Weight").Length>= _itemCount)
         {
             return;
         }
-        if (_elapsed > _interval)
-        {
-            _elapsed = 0;
-            var obj = Instantiate(_item[PramProbability()], transform);
-            Curve(obj);
-        }
     }
 
     /// <summary>
-    /// 確率計算
+    /// 生成
     /// </summary>
+    void Instans()
+    {
+        var obj = Instantiate(_item[PramProbability()], transform);
+        Curve(obj);
+    }
+
+    /// <summary>
+     /// 確率計算
+     /// </summary>
     int PramProbability()
     {
         var randomPoint = Random.Range(0, _totalWeight);
